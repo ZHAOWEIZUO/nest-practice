@@ -2,7 +2,7 @@
  * @Author: zwz
  * @Date: 2023-12-19 20:51:06
  * @LastEditors: zwz
- * @LastEditTime: 2023-12-21 15:54:35
+ * @LastEditTime: 2023-12-28 17:01:33
  * @Description: 请填写简介
  */
 import {
@@ -11,6 +11,7 @@ import {
   Inject,
   Injectable,
   Logger,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { md5 } from 'src/utils';
@@ -24,6 +25,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { LoginUserVo } from './vo/login-user.vo';
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 import { UpdateUserDto } from './dto/udpate-user.dto';
+import { UserListVo } from './vo/user-list.vo';
 
 @Injectable()
 export class UserService {
@@ -169,6 +171,7 @@ export class UserService {
       id: user.id,
       username: user.username,
       isAdmin: user.isAdmin,
+      email: user.email,
       roles: user.roles.map((item) => item.name),
       permissions: user.roles.reduce((arr, item) => {
         item.permissions.forEach((permission) => {
@@ -190,7 +193,7 @@ export class UserService {
     return user;
   }
 
-  async updatePassword(userId: number, passwordDto: UpdateUserPasswordDto) {
+  async updatePassword(passwordDto: UpdateUserPasswordDto) {
     const captcha = await this.redisService.get(
       `update_password_captcha_${passwordDto.email}`,
     );
@@ -203,8 +206,12 @@ export class UserService {
     }
 
     const foundUser = await this.userRepository.findOneBy({
-      id: userId,
+      username: passwordDto.username,
     });
+
+    if (foundUser.email !== passwordDto.email) {
+      throw new HttpException('邮箱不正确', HttpStatus.BAD_REQUEST);
+    }
 
     foundUser.password = md5(passwordDto.password);
 
@@ -300,10 +307,10 @@ export class UserService {
       take: pageSize,
       where: condition,
     });
+    const vo = new UserListVo();
 
-    return {
-      users,
-      totalCount,
-    };
+    vo.users = users;
+    vo.totalCount = totalCount;
+    return vo;
   }
 }

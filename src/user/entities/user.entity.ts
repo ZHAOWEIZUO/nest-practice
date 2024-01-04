@@ -2,7 +2,7 @@
  * @Author: zwz
  * @Date: 2023-12-19 20:51:56
  * @LastEditors: zwz
- * @LastEditTime: 2023-12-19 20:52:20
+ * @LastEditTime: 2023-12-28 10:52:27
  * @Description: 请填写简介
  */
 import {
@@ -26,6 +26,7 @@ export class User {
   @Column({
     length: 50,
     comment: '用户名',
+    unique: true,
   })
   username: string;
 

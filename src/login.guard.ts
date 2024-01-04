@@ -2,7 +2,7 @@
  * @Author: zwz
  * @Date: 2023-12-19 21:54:38
  * @LastEditors: zwz
- * @LastEditTime: 2023-12-21 14:04:05
+ * @LastEditTime: 2023-12-29 14:35:57
  * @Description: 请填写简介
  */
 import {
@@ -22,6 +22,7 @@ import { UnLoginException } from './unlogin.filter';
 interface JwtUserData {
   userId: number;
   username: string;
+  email: string;
   roles: string[];
   permissions: Permission[];
 }
@@ -67,6 +68,7 @@ export class LoginGuard implements CanActivate {
 
       request.user = {
         userId: data.userId,
+        email: data.email,
         username: data.username,
         roles: data.roles,
         permissions: data.permissions,

@@ -1,13 +1,13 @@
 /*
  * @Author: zwz
- * @Date: 2023-12-20 21:03:31
+ * @Date: 2023-12-27 15:24:57
  * @LastEditors: zwz
- * @LastEditTime: 2023-12-27 14:52:18
+ * @LastEditTime: 2023-12-27 15:24:58
  * @Description: 请填写简介
  */
-
 import { ApiProperty } from '@nestjs/swagger';
-export class UserDetailVo {
+
+class User {
   @ApiProperty()
   id: number;
 
@@ -21,14 +21,24 @@ export class UserDetailVo {
   email: string;
 
   @ApiProperty()
-  headPic: string;
-
-  @ApiProperty()
   phoneNumber: string;
 
   @ApiProperty()
   isFrozen: boolean;
 
   @ApiProperty()
+  headPic: string;
+
+  @ApiProperty()
   createTime: Date;
+}
+
+export class UserListVo {
+  @ApiProperty({
+    type: [User],
+  })
+  users: User[];
+
+  @ApiProperty()
+  totalCount: number;
 }

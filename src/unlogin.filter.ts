@@ -1,10 +1,3 @@
-/*
- * @Author: zwz
- * @Date: 2023-12-21 10:58:55
- * @LastEditors: zwz
- * @LastEditTime: 2023-12-21 14:04:30
- * @Description: 请填写简介
- */
 import {
   ArgumentsHost,
   Catch,
@@ -25,6 +18,7 @@ export class UnLoginException {
 export class UnloginFilter implements ExceptionFilter {
   catch(exception: UnLoginException, host: ArgumentsHost) {
     const response = host.switchToHttp().getResponse<Response>();
+    response.statusCode = HttpStatus.UNAUTHORIZED;
 
     response
       .json({
